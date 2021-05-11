@@ -1,0 +1,49 @@
+{
+  "name": "auv",
+  "version": "0.0.1",
+  "description": "EightDA-issued Gold-collateralized ERC20 asset",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "abi": "mkdir -p abi-out && solcjs --abi ./contracts/zeppelin/SafeMath.sol ./contracts/AuVImplementation.sol -o ./abi-out && cp ./abi-out/__contracts_AuVImplementation_sol_AuVImplementation.abi ./AuV.abi",
+    "compile": "truffle compile",
+    "coverage": "solidity-coverage",
+    "flatten-impl": "truffle-flattener ./contracts/AuVImplementation.sol > ./flattened/AuVImplementation.sol",
+    "flatten-proxy": "truffle-flattener ./contracts/zeppelin/AdminUpgradeabilityProxy.sol > ./flattened/AdminUpgradeabilityProxy.sol",
+    "ganache": "ganache-cli",
+    "migrate": "truffle migrate",
+    "solium": "solium -d contracts/ --fix",
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eightda/viiida-gold-contracts.git"
+  },
+  "author": "EightDA",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/eightda/viiida-gold-contracts/issues"
+  },
+  "homepage": "https://github.com/eightda/viiida-gold-contracts#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.10",
+    "@openzeppelin/upgrades": "^2.8.0",
+    "@truffle/hdwallet-provider": "^1.2.1",
+    "eth-sig-util": "^3.0.0",
+    "ganache-cli": "^6.12.2",
+    "solc": "0.4.24",
+    "solidity-coverage": "^0.7.14",
+    "solium": "^1.2.5",
+    "truffle": "^5.1.63",
+    "truffle-flattener": "^1.5.0"
+  },
+  "resolutions": {
+    "axios": "^0.21.1",
+    "ajv": "^6.12.3",
+    "elliptic": "^6.0.0",
+    "diff": "^3.5.0"
+  }
+}
