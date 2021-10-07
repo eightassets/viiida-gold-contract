@@ -2,7 +2,7 @@
 
 EightDA-issued phyiscal gold ERC20 token public smart contract repository.
 
-https://www.viiida.com/viiida-gold-whitepaper
+http://viiida.gold/whitepaper.pdf
 
 ## ABI, Address, and Verification
 
