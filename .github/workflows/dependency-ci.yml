@@ -20,7 +20,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '16.20.2'
+          # solc 0.4.24's legacy soljson build overflows the call stack on
+          # newer Node runtimes. Node 10 matches the toolchain generation this
+          # repository was built with and is isolated to compile/test only.
+          node-version: '10.24.1'
           cache: 'yarn'
 
       - name: Install dependencies
