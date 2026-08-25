@@ -45,4 +45,15 @@ jobs:
           exit 1
 
       - name: Run contract tests
-        run: yarn test
+        shell: bash
+        run: |
+          set -o pipefail
+          yarn test 2>&1 | tee /tmp/truffle-test.log
+          test_status=${PIPESTATUS[0]}
+          if [ "$test_status" -ne 0 ]; then
+            exit "$test_status"
+          fi
+          if grep -Eq '(^|[[:space:]])[1-9][0-9]* failing' /tmp/truffle-test.log; then
+            echo "::error::Truffle reported failing tests despite returning exit code 0."
+            exit 1
+          fi
