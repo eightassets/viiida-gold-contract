@@ -8,14 +8,14 @@
   },
   "scripts": {
     "abi": "mkdir -p abi-out && solcjs --abi ./contracts/zeppelin/SafeMath.sol ./contracts/AuVImplementation.sol -o ./abi-out && cp ./abi-out/__contracts_AuVImplementation_sol_AuVImplementation.abi ./AuV.abi",
-    "compile": "truffle compile",
+    "compile": "node --stack-size=4096 node_modules/.bin/truffle compile",
     "coverage": "solidity-coverage",
     "flatten-impl": "truffle-flattener ./contracts/AuVImplementation.sol > ./flattened/AuVImplementation.sol",
     "flatten-proxy": "truffle-flattener ./contracts/zeppelin/AdminUpgradeabilityProxy.sol > ./flattened/AdminUpgradeabilityProxy.sol",
     "ganache": "ganache-cli",
     "migrate": "truffle migrate",
     "solium": "solium -d contracts/ --fix",
-    "test": "truffle test"
+    "test": "node --stack-size=4096 node_modules/.bin/truffle test"
   },
   "repository": {
     "type": "git",
