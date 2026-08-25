@@ -1,0 +1,59 @@
+name: Dependency CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile-and-test:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # solc 0.4.24's legacy soljson build overflows the call stack on
+          # newer Node runtimes. Node 10 matches the toolchain generation this
+          # repository was built with and is isolated to compile/test only.
+          node-version: '10.24.1'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Compile contracts
+        run: yarn compile
+
+      - name: Start Ganache
+        run: |
+          yarn ganache --deterministic --quiet > /tmp/ganache.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if (echo > /dev/tcp/127.0.0.1/8545) >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/ganache.log
+          exit 1
+
+      - name: Run contract tests
+        shell: bash
+        run: |
+          set -o pipefail
+          yarn test 2>&1 | tee /tmp/truffle-test.log
+          test_status=${PIPESTATUS[0]}
+          if [ "$test_status" -ne 0 ]; then
+            exit "$test_status"
+          fi
+          if grep -Eq '(^|[[:space:]])[1-9][0-9]* failing' /tmp/truffle-test.log; then
+            echo "::error::Truffle reported failing tests despite returning exit code 0."
+            exit 1
+          fi

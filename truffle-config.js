@@ -46,7 +46,9 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: "v0.4.24+commit.e67f0147", // ex:  "0.4.20". (Default: Truffle's installed solc)
+      // Use the repository-pinned solc package instead of relying on the
+      // remote solc-bin version index. This keeps legacy builds reproducible.
+      version: require.resolve("solc/soljson.js"),
     },
   },
   solc: {
